@@ -1,0 +1,6 @@
+generateCSRRequest:
+  type: object
+  properties:
+    serverName:
+      type: string
+      example: toka.netlab.us.company.com

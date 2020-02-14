@@ -1,0 +1,6 @@
+200response_v1:
+  description: Request was successfully serviced
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/toka_response/toka_api_v1_response.yaml#/TokaAPIv1Response'

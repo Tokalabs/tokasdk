@@ -1,0 +1,9 @@
+configureCustomCertificateRequest:
+  type: object
+  properties:
+    certFile:
+      type: string
+      format: base64
+    keyFile:
+      type: string
+      format: base64    

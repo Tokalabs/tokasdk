@@ -1,0 +1,11 @@
+loginRequest:
+  required:
+    - username
+    - password
+  properties:
+    username:
+      type: string
+      example: username_here
+    password:
+      type: string
+      example: password_here

@@ -1,0 +1,21 @@
+editTrafficGeneratorRequest:
+  type: object
+  required: 
+    - hostname
+    - deviceType
+  properties:
+    hostname:
+      type: string
+      example: trafficGen-1
+    deviceType:
+      type: string
+      example: Ixia
+    assetID:
+      type: string
+      example: ''
+    physicalPortConnections:
+      $ref: '../../../schemas/inventory/common_inventory/physical_port_connections_obj.yaml#/physicalPortConnectionsObj'
+    deviceManagement:
+      $ref: '../../../schemas/inventory/common_inventory/device_management_obj.yaml#/deviceManagementObj'
+    snmpConfiguration:
+      $ref: '../../../schemas/inventory/common_inventory/snmp_configuration_object.yaml#/snmpConfigurationObj'

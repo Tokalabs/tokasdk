@@ -1,0 +1,1887 @@
+openapi: 3.0.1
+info:
+  title: Toka API 
+  description: >-
+    Toka API allows for programmatic interaction with the Toka controller. 
+  contact:
+    name: Tokalabs Inc.
+    url: https://tokalabs.com/
+    email: support@tokalabs.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.2
+
+
+servers:
+  - url: https://{hostname}/tokalabs/api
+    variables:
+      hostname:
+        default: LS200VE-Controller
+        description: Hostname of your webserver or IP Address of toka launch station
+      port:
+        enum:
+          - '80'
+          - '443'
+        default: '443'
+
+
+security:
+- ApiKeyAuth: []
+
+
+tags:
+  - name: Login
+    description: APIs for authentication
+  - name: Inventory Management
+    description: APIs to manage devices within your inventory
+  - name: Connections
+    description: APIs to manage connections within your inventory
+  - name: Topology
+    description: APIs to manage sandboxes
+  - name: SSL Certificate Management
+    description: APIs to manage SSL certificate configuration
+  - name: Test Builder
+    description: APIs to execute and monitor tests and scripts within sandboxes
+
+paths:
+
+  ## POST Login
+  /login:
+    summary: login to get token
+    post:
+      summary: Login to the Toka controller and obtain a valid Toka API token
+      description: Login to the Toka controller and obtain a valid Toka API token
+      operationId: login
+      tags:
+        - Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/login/login_request.yaml#/loginRequest'              
+      responses:
+        '400':  
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+
+
+  ## inventory management 
+  /devices:
+    summary: >- 
+      This API allows to retrieve all devices that have been added to the inventory as well as search and filter the devices based on certain criteria
+    description: >- 
+      This API allows to retrieve all devices that have been added to the inventory as well as search and filter the devices based on certain criteria
+    get:
+      summary: >-
+        Retrieve all devices that have been added to the inventory as well as search and filter the devices based on certain criteria
+      description: >-
+        Retrieve all devices that have been added to the inventory as well as search and filter the devices based on certain criteria
+      operationId: getInventoryDevices
+      tags: 
+        - Inventory Management
+      parameters:
+      - in: query
+        name: hostname
+        description: Allows filtering of retrieved devices based on hostname, Supports using regular expression
+        schema:
+          type: string
+      - in: query
+        name: deviceCategory
+        description: >- 
+          filter devices based on the device category <br>
+          Supports a special character ‘|’ as the OR operator
+        schema:
+          type: string
+      - in: query
+        name: deviceType
+        description: >- 
+          Allows filtering of retrieved devices based on the device type (e.g. Server)<br>
+          Supports a special character ‘|’ as the OR operator
+        schema:
+          type: string
+      - in: query
+        name: deviceVendor
+        description: >- 
+          Allows filtering of retrieved devices based on the device vendor (e.g. Allied Telesis)<br>
+          Supports a special character ‘|’ as the OR operator
+        schema:
+          type: string
+      - in: query
+        name: reservationStatus
+        description: >- 
+          Allows filtering of retrieved device based on whether they are currently reserved or not<br>
+          Supports a special character ‘|’ as the OR operator
+        schema:
+          type: string
+          enum: [reserved, available]
+      - in: query
+        name: primaryIPAddress
+        description: >- 
+          Allows filtering of retrieved devices based on primary IPAddress<br>
+          Supports using regular expression
+        schema:
+          type: string
+      - in: query
+        name: id
+        description: >- 
+          Allows filtering of retrieved devices based on the internal device id <br>
+          Supported values – Any non-negative integer <br>
+          Supports the following operators. <br> 
+          Eg - Equals, Less than, Greater than, Less than or equals to, Greater than or equals to <br>
+            id[lte]=100 returns all devices with id <= 100 <br>
+            id[gt]=100 returns all devices with id > 100 <br>
+            id=45 return the devices with id=45 <br>
+        schema:
+          type: string
+      - in: query
+        name: fieldsToFetch
+        description: >- 
+          Allows filtering of response data (hostname, vendor etc.) retrieved for each device<br>
+          Comma separated list of fields to be returned for each device <br>
+          If not specified, all fields will be returned for the matching devices
+        schema:
+          type: string
+      - in: query
+        name: sortOn
+        description: >- 
+          Indicates the field to sort the retrieved devices on<br>
+          If not specified, defaults to lastUpdatedAt
+        schema:
+          type: string
+          enum: [lastUpdatedAt, createdAt, lastUpdatedBy, createdBy, hostname, nodeId, deviceType, deviceCategory, status]
+      - in: query
+        name: sortOrder
+        description: >- 
+          Indicates the order to be used for sorting the retrieved devices<br>
+          If not specified, defaults to – <br> desc if the field (e.g. lastUpdatedAt, createdAt) specified by the sortOn request parameter is of type date/time <br> asc if the field (e.g. hostname, deviceType) specified by the sortOn request parameter is of any type other than date/time
+        schema:
+          type: string
+          enum: [asc, desc]
+      - in: query
+        name: pageNum
+        description: >- 
+          Indicates the page number of the results to be retrieved<br>
+          Supported values – Any integer value greater than 0, If not specified, defaults to 1
+        schema:
+          type: string
+      - in: query
+        name: pageSize
+        description: >- 
+          Indicates the maximum number of records included in a page i.e. indicates the maximum number of devices returned in the response<br>
+          Supported values – Multiples of 5, If not specified, defaults to 200
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST Network Devices
+  /devices/network/:
+    summary: This API allows to add a new network device to the inventory
+    description: This API allows to add a new network device to the inventory
+    post:
+      summary: Add a new network device to the inventory
+      description: Add a new network device to the inventory
+      operationId: addNetworkDevice
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/network_device/add_network_device.yaml#/addNetworkDeviceRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT Network Devices
+  '/devices/network/{hostname}':
+    summary: This API allows to edit/update an existing network device in the inventory
+    description: This API allows to edit/update an existing network device in the inventory
+    put:
+      summary: >-
+        Edit/update an existing network device in the inventory
+      description: >-
+        Edit/update an existing network device in the inventory
+      operationId: editNetworkDevice
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: name of the device
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/network_device/edit_network_device.yaml#/editNetworkDeviceRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST Traffic Generator
+  /devices/trafficgenerator/:
+    summary: This API allows to add a new traffic generator device to the inventory
+    description: This API allows to add a new traffic generator device to the inventory
+    post:
+      summary: Add a new traffic generator device to the inventory
+      description: Add a new traffic generator device to the inventory
+      operationId: addTrafficGenerator
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/traffic_generator/add_traffic_generator.yaml#/addTrafficGeneratorRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+  
+
+  ## PUT Traffic Generator
+  '/devices/trafficgenerator/{hostname}':
+    summary: >-
+      This API allows to edit/update an existing traffic generator device in the
+      inventory
+    description: >-
+      This API allows to edit/update an existing traffic generator device in the
+      inventory
+    put:
+      parameters:
+        - name: hostname
+          description: Traffic generator name
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      summary: >-
+        Edit/update an existing traffic generator device in the inventory
+      description: >-
+        Edit/update an existing traffic generator device in the inventory
+      operationId: editTrafficGenerator
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/traffic_generator/edit_traffic_generator.yaml#/editTrafficGeneratorRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST Link Manager
+  /devices/linkmanager/:
+    summary: This API allows to add a new link manager device to the inventory
+    description: This API allows to add a new link manager device to the inventory
+    post:
+      summary: Add a new link manager device to the inventory
+      description: Add a new link manager device to the inventory
+      operationId: addLinkManager
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/link_manager/add_link_manager_request.yaml#/addLinkManagerRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT Link Manager
+  '/devices/linkmanager/{hostname}':
+    summary: >-
+      This API allows to edit/update an existing link manager device in the
+      inventory
+    description: >-
+      This API allows to edit/update an existing link manager device in the
+      inventory
+    put:
+      summary: >-
+        Edit/update an existing link manager device in the inventory
+      description: >-
+        Edit/update an existing link manager device in the inventory
+      operationId: editLinkManager
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: Link Manager name
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+          explode: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/link_manager/edit_link_manager_request.yaml#/editLinkManagerRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST VMWARE vCenter
+  /devices/vmware/vcenter/:
+    summary: This API allows to add a new VMware vCenter device to the inventory
+    description: This API allows to add a new VMware vCenter device to the inventory
+    post:
+      summary: Add a new VMware vCenter device to the inventory
+      description: Add a new VMware vCenter device to the inventory
+      operationId: addVCenter
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/vmware/v_center/add_vcenter_request.yaml#/addVCenterRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT VMWARE vCenter
+  '/devices/vmware/vcenter/{hostname}':
+    summary: >-
+      This API allows to edit/update an existing VMWare vCenter device in the
+      inventory
+    description: >-
+      This API allows to edit/update an existing VMWare vCenter device in the
+      inventory
+    put:
+      summary: >-
+        Edit/update an existing VMWare vCenter device in the inventory
+      description: >-
+        Edit/update an existing VMWare vCenter device in the inventory
+      operationId: editVCenter
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: vCenter device name
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+          explode: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/vmware/v_center/edit_vcenter_request.yaml#/editVCenterRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST VMWARE VM PROFILE
+  /devices/vmware/vmprofile/:
+    summary: This API allows to add a new VM Profile to the inventory
+    description: This API allows to add a new VM Profile to the inventory
+    post:
+      summary: Add a new VMware VM Profile to the inventory
+      description: Add a new VMware VM Profile to the inventory
+      operationId: addVmProfile
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/vmware/vm_profile/add_vm_profile_request.yaml#/addVmProfileRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT VMWARE VM PROFILE 
+  '/devices/vmware/vmprofile/{hostname}':
+    summary: >-
+      This API allows to edit/update an existing VMware VM Profile in the
+      inventory
+    description: >-
+      This API allows to edit/update an existing VMware VM Profile in the
+      inventory
+    put:
+      summary: >-
+        Edit/update an existing VMware VM Profile in the inventory
+      description: >-
+        Edit/update an existing VMware VM Profile in the inventory
+      operationId: editVmProfile
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: VM Profile Name
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/vmware/vm_profile/edit_vm_profile_request.yaml#/editVmProfileRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST VMWARE VM
+  /devices/vmware/vm/:
+    summary: Add an existing VM (already belonging to a vCenter) to the inventory
+    description: Add an existing VM (already belonging to a vCenter) to the inventory
+    post:
+      summary: >-
+        Add an already existing VM (hosted on the specified VMware vCenter) or 
+        launch a new VM (on the specified VMware vCenter and then add) to the inventory
+      description: >-
+        Add an already existing VM (hosted on the specified VMware vCenter) or 
+        launch a new VM (on the specified VMware vCenter and then add) to the inventory
+      operationId: addVM
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/vmware/vm/add_vm_request.yaml#/addVMRequest'   
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT VMWARE VM
+  '/devices/vmware/vm/{hostname}':
+    summary: >-
+      This API allows to edit/update an existing VMware VM device in the
+      inventory
+    description: >-
+      This API allows to edit/update an existing VMware VM device in the
+      inventory
+    put:
+      summary: >-
+        Edit/update an existing VMware VM device in the inventory
+      description: >-
+        Edit/update an existing VMware VM device in the inventory
+      operationId: editVM
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: VMware VM name
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+          explode: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/vmware/vm/edit_vm_request.yaml#/editVMRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST AWS Region
+  /devices/aws/region/:
+    summary: This API allows to add a new AWS region to the inventory
+    description: This API allows to add a new AWS region to the inventory
+    post:
+      summary: Add an AWS region to the inventory
+      description: Add an AWS region to the inventory
+      operationId: addAWSRegion
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          applicatoin/json:
+            schema:
+              $ref: 'components/schemas/inventory/aws/aws_region/add_aws_region_request.yaml#/addAWSRegionRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT AWS Region
+  '/devices/aws/region/{hostname}':
+    summary: >-
+      This API allows to edit/update an existing AWS region device in the
+      inventory
+    description: >-
+      This API allows to edit/update an existing AWS region device in the
+      inventory
+    put:
+      summary: >-
+        Edit/update an existing AWS region in the inventory
+      description: >-
+        Edit/update an existing AWS region in the inventory
+      operationId: editAWSRegion
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: AWS Region
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+          explode: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/aws/aws_region/edit_aws_region_request.yaml#/editAWSRegionRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST AWS VPC
+  /devices/aws/vpc/:
+    summary: >-
+      Add an existing AWS VPC to the inventory OR Create a new VPC in AWS and
+      add it to the inventory
+    description: >-
+      Add an existing AWS VPC to the inventory OR Create a new VPC in AWS and
+      add it to the inventory
+    post:
+      summary: >-
+        Add an existing AWS VPC or create a new AWS VPC and add it to the 
+        inventory
+      description: >-
+        Add an existing AWS VPC or create a new AWS VPC and add it to the 
+        inventory
+      operationId: addAWSVpc
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/aws/aws_vpc/add_aws_vpc_request.yaml#/addAWSVpcRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST AWS EC2
+  /devices/aws/ec2instance/:
+    summary: >-
+      Add an existing AWS EC2 instance to the inventory OR Create a new EC2
+      instance in AWS and add it to the inventory
+    description: >-
+      Add an existing AWS EC2 instance to the inventory OR Create a new EC2
+      instance in AWS and add it to the inventory
+    post:
+      summary: >-
+        Add an existing AWS EC2 instance or create a new AWS EC2 instance and 
+        add it to the inventory
+      description: >-
+        Add an existing AWS EC2 instance or create a new AWS EC2 instance and 
+        add it to the inventory
+      operationId: addEC2
+      tags:
+        - Inventory Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/aws/aws_ec2/add_ec2_request.yaml#/addEC2Request'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT AWS EC2
+  '/devices/aws/ec2instance/{hostname}':
+    summary: >-
+      Edit/update an existing AWS EC2 instance device in the inventory
+    description: >-
+      Edit/update an existing AWS EC2 instance device in the inventory
+    put:
+      summary: >-
+        Edit/update an existing AWS EC2 instance device in the inventory
+      description: >-
+        Edit/update an existing AWS EC2 instance device in the inventory
+      operationId: editEC2
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: AWS Ec2 Instance Name
+          in: path
+          required: true
+          schema:
+            type: string
+          style: simple
+          explode: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/aws/aws_ec2/edit_ec2_request.yaml#/editEC2Request'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+  ## GET Connections
+  /connections:
+    summary: >-
+      This API allows to retrieve all connections that have been added to the
+      inventory as well as search and filter the connections based on certain
+      criteria 
+    description: >-
+      This API allows to retrieve all connections that have been added to the
+      inventory as well as search and filter the connections based on certain
+      criteria 
+    get:
+      summary: >-
+        Retrieve all connections that have been added to the inventory as well 
+        as search and filter the connections based on certain criteria 
+      description: >-
+        Retrieve all connections that have been added to the inventory as well 
+        as search and filter the connections based on certain criteria 
+      operationId: getConnectionsAndFilter
+      tags: 
+        - Connections
+      parameters: 
+        - in: query
+          description: >- 
+            Filtering of retrieved connections based on connection id,   <br>
+            Supports returning multiple connections by specifying a comma separated list of connection id’s.<br>At most 40 connection ids can be specified 
+          name: connectionId
+          schema:
+            type: string
+        - in: query
+          description: >- 
+            Filter based on hostname. <br>
+            Connections that have either the source host or target host matching the     specified hostname will be returned. <br>
+            Supports specifying multiple hostnames by specifying a comma separated list of hostnames matching regular expression patterns
+          name: hostname
+          schema:
+            type: string
+        - in: query
+          description: >- 
+            Allows filtering of retrieved connections based on whether they are currently reserved or not <br>
+            Note that only traffic generator connections can be “reserved” <br>
+            Specifying this filter as “reserved/available” will "exclude/include" all connections not involving a traffic generator device
+          name: reservationStatus
+          schema:
+            type: string
+            enum:
+              - reserved
+              - available
+        - in: query
+          description: |
+            Allows including indirect connections for the specified hosts <br>
+            Allows for identifying neighbors of a device <br>
+            If and set to true, then request must include only the hostname filter. <br>
+            Response will include indirect connections in addition to direct connection.
+          name: includeIndirectConnections
+          schema:
+            type: string
+            enum:
+              - false
+              - true
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+  
+  ## POST Connections
+    post: 
+      summary: >-
+        Add a new connection to the inventory
+      description: >-
+        Add a new connection to the inventory
+      operationId: addConnections
+      tags: 
+        - Connections
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/inventory/connections/add_connections_request.yaml#/addConnectionsRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## GET Topology
+  /topologies:
+    summary: >-
+      This API allows to create a new topology
+    description: >-
+      This API allows to create a new topology
+    get:
+      summary: >-
+        Retrieve all topologies as well as search and filter topologies based on certain criteria
+      description: >-
+        Retrieve all topologies as well as search and filter topologies based on certain criteria
+      operationId: getTopology
+      tags: 
+        - Topology
+      parameters: 
+      - in: query
+        description: >- 
+          Filtering topologies based on name<br>
+          Supports specifying multiple topologies by specifying a comma separated list of topologies matching regular expression patterns
+        name: name
+        schema:
+          type: string
+      - in: query   
+        description: >- 
+          Filtering topologies based on group name<br>
+          Supports multiple groups by specifying a comma separated list 
+        name: group
+        schema:
+          type: string
+      - in: query
+        name: reservationStatus
+        description: >- 
+          Allows filtering of retrieved topologies based on whether they are currently reserved or not
+        schema:
+          type: string
+          enum: [reserved, available, unavailable]
+      - in: query
+        name: usersWithAccess
+        description: >- 
+          Filter based on users who have access <br>
+          Supports a special keyword all that implies retrieving topologies that all users have access to<br>
+          Supports a special character ‘|’ as the OR operator<br>
+          Supports using regular expressions
+        schema:
+          type: string
+      - in: query
+        name: fieldsToFetch
+        description: >- 
+          Filtering of response data retrieved for each device <br>
+          Comma separated list of fields to be returned for each topology<br>
+          Supports filtering of only top-level fields e.g. name, group, accessControl etc<br>
+          If not specified, all fields will be returned for the matching topologies
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+    ## POST Topologies
+    post:
+      tags: 
+        - Topology
+      summary: >-
+        Create a new topology
+      description: >-
+        Create a new topology
+      operationId: addTopology
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/topology/add_topology_request.yaml#/addTopologyRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## PUT Topology
+  /topologies/{topologyname}:
+    summary: >-
+      This API allows to edit/update an existing topology
+    description: >-
+      This API allows to edit/update an existing topology
+    put:
+      summary: >-
+        Edit/update an existing topology
+      description: >-
+        Edit/update an existing topology
+      parameters:
+      - name: topologyname
+        description: Existing topology name
+        in: path
+        required: true
+        schema:
+          type: string
+        style: simple
+        explode: false
+      tags: 
+        - Topology
+      operationId: editTopology
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/topology/edit_topology_request.yaml#/editTopologyRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_edit_response.yaml#/201editresponse'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_edit_response.yaml#/409editresponse'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+    ## DELETE Topology
+    delete:
+      summary: >-
+        Delete an existing topology
+      description: >-
+        Delete an existing topology
+      operationId: deleteTopology
+      tags: 
+        - Topology
+      parameters:
+      - name: topologyname
+        description: Existing topology name
+        in: path
+        required: true
+        schema:
+          type: string
+        style: simple
+        explode: false
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST Self Signed Certificate
+  /ssl/selfSignedCertificate:
+    summary: >-
+      This API generates a new self-signed SSL certificate and configures the Tokalabs server to use this newly generated self-signed SSL certificate 
+    description: >-
+      This API generates a new self-signed SSL certificate and configures the Tokalabs server to use this newly generated self-signed SSL certificate
+    post:
+      summary: >-
+        Generate a new self-signed SSL certificate and configure the Tokalabs server to use this newly generated self-signed SSL certificate
+      description: >-
+        Generate a new self-signed SSL certificate and configure the Tokalabs server to use this newly generated self-signed SSL certificate
+      operationId: configureSelfSignedCertificate
+      tags: 
+        - SSL Certificate Management
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## POST CSR
+  /ssl/csr:
+    summary: >-
+      This API generates a new certificate signing request (CSR) and a private key associated with the CSR 
+    description: >-
+      This API generates a new certificate signing request (CSR) and a private key associated with the CSR 
+    post:
+      summary: >-
+        Generate a new certificate signing request (CSR) and a private key associated with the CSR 
+      description: >-
+        Generate a new certificate signing request (CSR) and a private key associated with the CSR 
+      operationId: generateCSR
+      tags:
+        - SSL Certificate Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'components/schemas/ssl/generate_csr_request.yaml#/generateCSRRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_csr_response.yaml#/TokaAPIResponse'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+        default:
+          description: Downloadable certificate and key as zip file
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+
+  ## POST Custom Certificate
+  /ssl/customCertificate:
+    summary: >- 
+      This API configures the Tokalabs server to use a new certificate (and private key associated with the certificate)
+    description: >-
+      This API configures the Tokalabs server to use a new certificate (and private key associated with the certificate)
+    post:
+      summary: >-
+        Configures the Tokalabs controller to use a new certificate (and private key associated with the certificate)
+      description: >-
+        Configures the Tokalabs controller to use a new certificate (and private key associated with the certificate)
+      operationId: configureCustomCertificate
+      tags:
+        - SSL Certificate Management
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: 'components/schemas/ssl/configure_custom_certificate_request.yaml#/configureCustomCertificateRequest'
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '201':
+          $ref: 'components/responses/201_response.yaml#/201response'
+        '202':
+          $ref: 'components/responses/202_response.yaml#/202response'
+        '400':
+          $ref: 'components/responses/400_response.yaml#/400response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '409':
+          $ref: 'components/responses/409_response.yaml#/409response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## DELETE Inventory Devices
+  '/devices/{hostname}':
+    summary: >-
+      This API allows to delete an existing device that is present in the
+      inventory 
+    description: >-
+      This API allows to delete an existing device that is present in the
+      inventory 
+    delete:
+      summary: >-
+        Delete an existing device from the inventory 
+      description: >-
+        Delete an existing device from the inventory  
+      operationId: deleteInventoryDevice
+      tags:
+        - Inventory Management
+      parameters:
+        - name: hostname
+          description: Name of the device to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+        - in: query
+          description: delete device from inventory
+          name: deleteFromServer
+          schema:
+            type: string
+            enum:
+              - true
+              - false
+          required: true
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+
+  ## DELETE Connections
+  /connections/{connectionid}:
+    summary: >-
+      This API allows to delete a connection from inventory
+    description: >-
+      This API allows to delete a connection from inventory.
+    delete:
+      summary: >-
+        Delete an existing connection from the inventory
+      description: >-
+        Delete an existing connection from the inventory
+      operationId: deleteConnection
+      tags:
+        - Connections
+      parameters:
+      - name: connectionid
+        description: Existing connection id.
+        in: path
+        required: true
+        schema:
+          type: string
+        style: simple
+        explode: false
+      responses:
+        '200':
+          $ref: 'components/responses/200_response.yaml#/200response'
+        '401':
+          $ref: 'components/responses/401_response.yaml#/401response'
+        '403':
+          $ref: 'components/responses/403_response.yaml#/403response'
+        '404':
+          $ref: 'components/responses/404_response.yaml#/404response'
+        '500':
+          $ref: 'components/responses/500_response.yaml#/500response'
+
+  /topology/{topology_name}/reserve/user={username}/token={api_token}:
+    summary: Reserve a topology
+    get:
+      summary: >-
+        Reserve a topology
+      description: >-
+        Reserve a topology
+      operationId: reserve_topology_v1
+      tags:
+        - Topology
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology to reserve.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+
+
+  /topology/{topology_name}/release/user={username}/token={api_token}:
+    summary: Release a topology
+    get:
+      summary: >-
+        Release an already reserved topology
+      description: >-
+        Release an already reserved topology
+      operationId: release_topology_v1
+      tags:
+        - Topology
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology to release.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'    
+
+  /topology/{topology_name}/run/test/suite={suite_name}/test={testcase_id}/user={username}/token={api_token}:
+    summary: Run a test
+    get:
+      summary: >-
+        Run a test
+      description: >-
+        Run a test
+      operationId: run_test_v1
+      tags: 
+        - Test Builder
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test to run.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite that contains the test to run.
+        - in: path
+          name: testcase_id
+          schema:
+            type: string
+          required: true
+          description: Id of the test to run.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+
+  /topology/{topology_name}/abort/test/suite={suite_name}/test={testcase_id}/user={username}/token={api_token}:
+    summary: Abort a running test
+    get:
+      summary: >-
+        Abort an already executing test
+      description: >-
+        Abort an already executing test
+      operationId: abort_test_v1
+      tags: 
+        -  Test Builder
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test to abort.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite that contains the test to abort.
+        - in: path
+          name: testcase_id
+          schema:
+            type: string
+          required: true
+          description: Id of the test to abort.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+  
+  /topology/{topology_name}/pause/test/suite={suite_name}/test={testcase_id}/user={username}/token={api_token}:
+    summary: Pause a running test
+    get:
+      summary: >-
+        Pause an already executing test
+      description: >-
+        Pause an already executing test
+      operationId: pause_test_v1
+      tags: 
+        - Test Builder
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test to pause.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite that contains the test to pause.
+        - in: path
+          name: testcase_id
+          schema:
+            type: string
+          required: true
+          description: Id of the test to pause.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+      
+  /topology/{topology_name}/resume/test/suite={suite_name}/test={testcase_id}/user={username}/token={api_token}:
+    summary: Resume a paused test
+    get:
+      summary: >-
+        Resume an already paused test
+      description: >-
+        Resume an already paused test
+      operationId: resume_test_v1
+      tags: 
+        - Test Builder
+      parameters: 
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the paused test to resume.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite that contains the paused test to resume.
+        - in: path
+          name: testcase_id
+          schema:
+            type: string
+          required: true
+          description: Id of the paused test that is to be resumed.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+
+  /topology/{topology_name}/status/test/suite={suite_name}/test={testcase_id}/user={username}/token={api_token}:
+    summary: Get test status
+    get:
+      summary: >-
+        Retrieve status of a test
+      description: >-
+        Retrieve status of a test
+      operationId: get_test_status_v1
+      tags: 
+        - Test Builder
+      parameters: 
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test whose status is to be retrieved.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite that contains the test whose status is to be retrieved.
+        - in: path
+          name: testcase_id
+          schema:
+            type: string
+          required: true
+          description: Id of the test whose status is to be retrieved.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+          
+  /topology/{topology_name}/run/suite/suite={suite_name}/user={username}/token={api_token}:
+    summary: Run a test suite.
+    get:
+      summary: >-
+        Run a test suite
+      description: >-
+        Run a test suite
+      operationId: run_test_suite_v1
+      tags: 
+        - Test Builder
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test suite to run.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite to run.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+
+  /topology/{topology_name}/abort/suite/suite={suite_name}/user={username}/token={api_token}:
+    summary: Abort an already executing test suite.
+    get:    
+      summary: >-
+        Abort an already executing test suite
+      description: >-
+        Abort an already executing test suite
+      operationId: abort_test_suite_v1
+      tags: 
+        - Test Builder
+      parameters:
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test suite to abort.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite to abort.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+  
+  /topology/oldSuiteName={old_suite_name}/newSuiteName={new_suite_name}/topologyName={topology_name}/user={username}/token={api_token}:
+    summary: Clone a test suite
+    get:
+      summary: >-
+        Clone a test suite.
+      description: >-
+        Clone a test suite.
+      operationId: clone_test_suite_v1
+      tags: 
+        - Test Builder
+      parameters: 
+        - in: path
+          name: old_suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite to be cloned.
+        - in: path
+          name: new_suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the new test suite to be created as a clone.
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test suite to clone.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+
+  /topology/{topology_name}/status/suite/suite={suite_name}/user={username}/token={api_token}:
+    summary: Get test suite status
+    get:
+      summary: >-
+        Retrieve status of a test suite.
+      description: >-
+        Retrieve status of a test suite.
+      operationId: get_test_suite_status_v1
+      tags: 
+        - Test Builder
+      parameters: 
+        - in: path
+          name: topology_name
+          schema:
+            type: string
+          required: true
+          description: Name of the topology that contains the test suite whose status is to be retrieved.
+        - in: path
+          name: suite_name
+          schema:
+            type: string
+          required: true
+          description: Name of the test suite whose status is to be retrieved.
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Name of the user initiating the request.
+        - in: path
+          name: api_token
+          schema:
+            type: string
+          required: true
+          description: API token for the the user initiating the request.
+      responses:
+        200:
+          $ref: 'components/responses/200_response_v1.yaml#/200response_v1'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: Authorization
+      in: header

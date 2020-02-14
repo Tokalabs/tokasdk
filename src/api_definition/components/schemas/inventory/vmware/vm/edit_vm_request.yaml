@@ -1,0 +1,12 @@
+editVMRequest:
+  type: object
+  properties:
+    network:
+      type: string
+      example: vcenter-1-port-group-1
+    deviceManagement:
+      $ref: '../common_vmware/device_management_vmware_obj.yaml#/deviceManagementVMwareObj'
+    webOptions:
+      $ref: '../../../../schemas/inventory/common_inventory/web_options/web_options_object.yaml#/webOptionsObject'
+    options:
+      $ref: '../common_vmware/vmware_options.yaml#/vmwareOptions'

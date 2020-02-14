@@ -1,0 +1,36 @@
+TokaAPIv1Response:
+  type: object
+  properties:
+    status:
+      type: string
+      example: ""
+    message:
+      type: string
+      example: ""
+    description:
+      type: string
+      example: ""
+    TestSuiteName:
+      type: string
+      example: ""
+    TopologyName:
+      type: string
+      example: ""
+    TestSuiteStatus:
+      type: string
+      example: ""
+    TestCaseID:
+      type: string
+      example: ""
+    TestCaseStatus:
+      type: string
+      example: ""
+    TopologyOwner:
+      type: string
+      example: ""
+    TopologyState:
+      type: string
+      example: ""
+
+
+    

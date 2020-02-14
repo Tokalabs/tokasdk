@@ -1,0 +1,7 @@
+TokaAPIResponse:
+  description: Certificate and key as zip file
+  content:
+    application/zip:
+      schema:
+        type: string
+        format: binary

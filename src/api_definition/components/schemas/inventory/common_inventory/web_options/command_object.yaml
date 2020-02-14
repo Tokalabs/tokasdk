@@ -1,0 +1,8 @@
+commandObject:
+  type: array
+  items:
+    type: string
+    properties:
+      line1:
+        type: string
+        example: line-1

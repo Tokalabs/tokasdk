@@ -1,0 +1,9 @@
+snmpConfigurationObj:
+  type: object
+  properties:
+    enabled:
+      type: boolean
+      example: true
+    communityString:
+      type: string
+      example: ''

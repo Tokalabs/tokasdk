@@ -1,0 +1,7 @@
+editEC2Request:
+  type: object
+  properties:
+    deviceManagement:
+      $ref: '../common_aws/device_management_obj_aws.yaml#/deviceManagementObjAWS'
+    webOptions:
+      $ref: '../../../../schemas/inventory/common_inventory/web_options/web_options_object.yaml#/webOptionsObject'

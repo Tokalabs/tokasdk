@@ -1,0 +1,9 @@
+physicalPortConnectionsObj:
+  type: object
+  properties:
+    type:
+      type: string
+      example: External
+    interfaces:
+      type: string
+      example: 'eth0,eth1,port1.0.1,port1.0.2,port1-100'

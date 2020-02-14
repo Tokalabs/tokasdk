@@ -1,0 +1,21 @@
+addLinkManagerRequest:
+  type: object
+  required: 
+    - hostname
+    - deviceType
+  properties:
+    hostname:
+      type: string
+      example: at-linkmgr-US-1
+    deviceType:
+      type: string
+      example: AlliedTelesis
+    assetID:
+      type: string
+      example: R012281
+    deviceManagement:
+      $ref: '../../../schemas/inventory/common_inventory/device_management_obj.yaml#/deviceManagementObj'
+    snmpConfiguration:
+      $ref: '../../../schemas/inventory/common_inventory/snmp_configuration_object.yaml#/snmpConfigurationObj'
+    virtualInterface:
+      $ref: '../../../schemas/inventory/common_inventory/virtual_interface_obj.yaml#/virtualInterfaceObj'

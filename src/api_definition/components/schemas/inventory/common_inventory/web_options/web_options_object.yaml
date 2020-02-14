@@ -1,0 +1,13 @@
+webOptionsObject:
+  type: array
+  items:
+    type: object
+    required: 
+      - name
+      - command
+    properties:
+      name:
+        type: string
+        example: weboption-1
+      command:
+        $ref: 'command_object.yaml#/commandObject'

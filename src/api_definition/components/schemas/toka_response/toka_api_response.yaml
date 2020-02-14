@@ -1,0 +1,13 @@
+TokaAPIResponse:
+  type: object
+  properties:
+    status:
+      type: string
+    message:
+      type: string
+    additionalDetails:
+      type: object
+
+
+
+          

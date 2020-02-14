@@ -1,0 +1,39 @@
+editNetworkDeviceRequest:
+  type: object
+  required: 
+    - hostname
+    - deviceType  
+  properties:
+    hostname:
+      type: string
+      example: labmgr-us.company.com
+    deviceType:
+      type: string
+      enum: 
+        - ap
+        - appliance
+        - client
+        - firewall
+        - jumphost
+        - router
+        - server
+        - switch
+        - wirelessrouter
+        - wireless router
+        - vm
+        - other
+    assetID:
+      type: string
+      example: ''
+    vendor:
+      type: string
+      example: Dell
+    physicalPortConnections:
+      $ref: '../../../schemas/inventory/common_inventory/physical_port_connections_obj.yaml#/physicalPortConnectionsObj'
+    deviceManagement:
+      $ref: '../../../schemas/inventory/common_inventory/device_management_obj_full.yaml#/deviceManagementObjFull'
+    snmpConfiguration:
+      type: object
+      $ref: '../../../schemas/inventory/common_inventory/snmp_configuration_object.yaml#/snmpConfigurationObj'
+    webOptions:
+      $ref: '../../../schemas/inventory/common_inventory/web_options/web_options_object.yaml#/webOptionsObject'

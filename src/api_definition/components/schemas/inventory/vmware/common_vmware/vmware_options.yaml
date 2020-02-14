@@ -1,0 +1,14 @@
+vmwareOptions:
+  type: object
+  properties:
+    requestType:
+      type: string
+      enum:
+        - addExisting
+        - createNew
+    scope:
+      type: string
+      enum:
+        - global
+        - topology
+      example: global

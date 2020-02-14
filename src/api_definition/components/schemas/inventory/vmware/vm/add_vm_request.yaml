@@ -1,0 +1,28 @@
+addVMRequest:
+  type: object
+  properties:
+    hostname:
+      type: string
+      example: vm-1
+    vcenter:
+      type: string
+      example: vcenter-1
+    vmprofile:
+      type: string
+      example: vm-profile-1
+    network:
+      type: string
+      example: vcenter-1-port-group-1
+    scope:
+      type: string
+      enum:
+        - global
+        - topology
+      example: global
+    deviceManagement:
+      $ref: '../common_vmware/device_management_vmware_obj.yaml#/deviceManagementVMwareObj'
+    webOptions:
+      $ref: '../../../../schemas/inventory/common_inventory/web_options/web_options_object.yaml#/webOptionsObject'
+    options:
+      $ref: '../common_vmware/vmware_options.yaml#/vmwareOptions'
+  

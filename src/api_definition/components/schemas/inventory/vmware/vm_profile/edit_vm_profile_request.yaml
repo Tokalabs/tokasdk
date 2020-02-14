@@ -1,0 +1,23 @@
+editVmProfileRequest:
+  type: object
+  required: 
+    - vcenter
+    - sourceType
+    - source
+    - deviceManagement
+  properties:
+    vcenter:
+      type: string
+      example: vcenter-1
+    sourceType:
+      type: string
+      example: template
+    source:
+      type: string
+      example: centos7-minimal-secure
+    deviceManagement:
+      $ref: '../common_vmware/device_management_vmware_obj.yaml#/deviceManagementVMwareObj'
+    snmpConfiguration:
+      $ref: '../../../../schemas/inventory/common_inventory/snmp_configuration_object.yaml#/snmpConfigurationObj'
+    webOptions:
+      $ref: '../../../../schemas/inventory/common_inventory/web_options/web_options_object.yaml#/webOptionsObject'
