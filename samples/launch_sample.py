@@ -439,7 +439,7 @@ def run_samples(toka_controller_ip, toka_controller_user, toka_controller_passwd
                                 toka_api_configuration=toka_sdk_config_obj,
                                 topo_name='topo-us-lab-setup',
                                 test_suite_to_clone_from='TrafficTesting',
-                                test_suite_to_clone_to='TrafficTesting4'
+                                test_suite_to_clone_to='TrafficTestingClone'
     )
 
     if True != testSuiteClonedSuccessfully:
@@ -485,4 +485,7 @@ def main():
         sys.exit(1)
 
 
-main()
+if __name__ == "__main__":
+    main()
+
+
