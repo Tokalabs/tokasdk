@@ -12,7 +12,7 @@ This module has methods for the following -
  - Clone a test suite
 
     Compatible with the following Toka controller version(s) -
-    >= 1.4.7.1
+    >= 1.4.8.0
 
     Compatible with the following Python version(s) -
     2.7, 3.4+

@@ -5,7 +5,7 @@ controller fully qualified domain name (FQDN) or IP address as well as
 other options such as SSL verification settings.
 
     Compatible with the following Toka controller version(s) -
-    >= 1.4.7.1
+    >= 1.4.8.0
 
     Compatible with the following Python version(s) -
     2.7, 3.4+
