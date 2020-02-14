@@ -1,5 +1,5 @@
 # Toka SDK Samples
-Toka SDK samples serve as a library for common operations that can be accomplished using the Toka SDK API clientas well as demonstrate using the the Toka SDK API client 
+Toka SDK samples serve as a library for common operations that can be accomplished using the Toka SDK API client as well as demonstrate using the the Toka SDK API client. Note that the Toka SDK API client supports a lot more operations (than that covered by the Toka SDK samples here) and allows for a lot more programmatic control of the Toka controller
 
 ### Licensing
 All samples are licensed under Apache License 2.0
