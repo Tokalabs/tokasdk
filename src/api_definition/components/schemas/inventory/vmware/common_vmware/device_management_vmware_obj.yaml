@@ -1,0 +1,47 @@
+deviceManagementVMwareObj:
+  type: object
+  properties:
+    allowUsersToManageDevices:
+      type: boolean
+      example: true
+    fetchIPAddressUsingVMwareTools:
+      type: boolean
+      example: true
+    managementInterfaces:
+      type: array
+      items:
+        type: object
+        properties:
+          managementType:
+            type: string
+            enum:
+              - primary
+              - secondary
+          enabled:
+            type: boolean
+            example: true
+          type:
+            type: string
+            enum: [Telnet, SSH, RDP, VNC, HTTP, HTTPS]
+          networkAddress:
+            type: string
+            example: ip_address
+          networkPort:
+            type: integer
+            example: 22
+          authType:
+            type: string
+            enum: [password, private key]
+          username:
+            type: string
+          password:
+            type: string
+          password_2:
+            type: string
+          privateKey:
+            type: string
+          passphrase:
+            type: string
+          supportsSFTP:
+            type: boolean
+            example: true

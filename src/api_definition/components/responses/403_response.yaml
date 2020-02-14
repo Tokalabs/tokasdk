@@ -1,0 +1,11 @@
+403response:
+  description: >-
+    Request includes a valid authentication token but the token in
+    unauthorized to perform the requested action
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/toka_response/toka_api_response.yaml#/TokaAPIResponse'
+    text/html; charset=UTF-8:
+      schema:
+        type: string

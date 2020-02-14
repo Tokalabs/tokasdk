@@ -1,0 +1,15 @@
+addConnectionsRequest:
+  type: object
+  properties:
+    sourceHost:
+      type: string
+      example: switch-lab-1
+    targetHost:
+      type: string
+      example: ati_l1_switch
+    sourcePortId:
+      type: string
+      example: port1.0.1
+    targetPortId:
+      type: string
+      example: port1.0.22

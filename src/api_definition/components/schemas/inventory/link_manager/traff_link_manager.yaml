@@ -1,0 +1,85 @@
+addLinkManagerRequest:
+  type: object
+  required: 
+    - hostname
+    - deviceType
+  properties:
+    hostname:
+      type: string
+      example: at-linkmgr-US-1
+    deviceType:
+      type: string
+      example: AlliedTelesis
+    assetID:
+      type: string
+      example: R012281
+    deviceManagement:
+      type: object
+      properties:
+        allowUsersToManageDevices:
+          type: boolean
+          example: true
+        managementInterfaces:
+          type: array
+          items:
+            type: object
+            required: 
+              - managementType
+              - type
+              - networkAddress
+              - networkPort
+              - authType
+            properties:
+              managementType:
+                type: string
+                enum:
+                  - primary
+                  - secondary
+              enabled:
+                type: boolean
+                example: true
+              type:
+                type: string
+                enum: [SSH, Telnet, RDP, VNC, HTTP, HTTPS]
+              networkAddress:
+                type: string
+                example: ip_address
+              networkPort:
+                type: integer
+                example: 22
+              authType:
+                type: string
+                enum: [password, private key]
+              username:
+                type: string
+              password:
+                type: string
+              password_2:
+                type: string
+              privateKey:
+                type: string
+              passphrase:
+                type: string
+              supportsSFTP:
+                type: boolean
+                example: true
+    snmpConfiguration:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          example: true
+        communityString:
+          type: string
+          example: ''
+    virtualInterface:
+      type: object
+      required: 
+        - uplinkPort
+      properties:
+        enabled:
+          type: boolean
+          example: true
+        uplinkPort:
+          type: integer
+          example: 1234

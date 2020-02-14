@@ -1,0 +1,59 @@
+addVCenterRequest:
+    type: object
+    required:
+      - hostname
+    properties:
+      hostname:
+        type: string
+        example: vcenter-1-us.company.com
+      assetID:
+        type: string
+        example: ''
+      deviceManagement:
+        type: object
+        properties:
+          allowUsersToManageDevices:
+            type: boolean
+            example: true
+          managementInterfaces:
+            type: array
+            items:
+              type: object
+              required: 
+                - managementType
+                - type
+                - networkAddress
+                - authType
+              properties:
+                managementType:
+                  type: string
+                  enum:
+                    - primary
+                    - secondary
+                enabled:
+                  type: boolean
+                  example: true
+                type:
+                  type: string
+                  example: https
+                networkAddress:
+                  type: string
+                  example: 'https://<vcenter_ip_address>:443/login/'
+                authType:
+                  type: string
+                  example: password-here
+                username:
+                  type: string
+                  example: vcenter-admin-here
+                password:
+                  type: string
+                  example: vcenter-admin-password-here
+      autoDiscoveryOptions:
+        type: object
+        properties:
+          autoDiscoverVMs:
+            type: boolean
+            example: true
+          autoDiscoverNetworks:
+            type: boolean
+            example: true

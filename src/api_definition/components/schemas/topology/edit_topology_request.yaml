@@ -1,0 +1,84 @@
+editTopologyRequest:
+  type: object
+  required: 
+    - name
+  properties:
+    name:
+      type: string
+      example: product_demo_cloud_use_case
+    group:
+      type: string
+      example: product_demos
+    accessControl:
+      type: object
+      properties:
+        allowAllUsers:
+          type: boolean
+          example: true
+        allowedUsers:
+          type: array
+          items:
+            type: string
+            example: user-1
+    reservationManagement:
+      type: object
+      properties:
+        forceCalendarReservation: 
+          type: boolean
+          example: true
+    devices:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            example: server.company.com,
+          abstractId: 
+            type: string
+            example: DUT1
+    indirectConnections:
+      type: array
+      items:
+        type: object
+        properties:
+          intermediaries: 
+            type: array
+            items:
+              type: object
+              required: 
+                - sourceHost
+                - sourcePortId
+                - targetHost
+                - targetPortId
+              properties:
+                sourceHost:
+                  type: string
+                  example: tgen_lab-1.company.com
+                sourcePortId: 
+                  type: string
+                  example: P1
+                targetHost:
+                  type: string
+                  example: link_mgr-lab-1
+                targetPortId: 
+                  type: string
+                  example: P1
+    options:
+      type: object
+      properties:
+        autoAssignAbstractIds: 
+          type: boolean
+          example: true
+        deviceConnectionOptions:
+          type: object
+          properties:
+            autoConnectDevices:
+              type: boolean
+              example: true
+            onlyUseTrafficGenConnectionsIfAvailable:
+              type: boolean
+              example: true
+        createGroupIfNeeded:
+          type: boolean
+          example: true

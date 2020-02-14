@@ -1,0 +1,26 @@
+addEC2Request:
+  type: object
+  required:
+    - hostname
+  properties:
+    hostname:
+      type: string
+      example: aws-EC1-01
+    region:
+      type: string
+      example: us-east-2
+    vpc:
+      type: string
+      example: aws-vpc-1
+    instanceType:
+      type: string
+      example: t2.nano
+    template:
+      type: string
+      example: ami-linux
+    options:
+      $ref: '../../vmware/common_vmware/vmware_options.yaml#/vmwareOptions'
+    deviceManagement:
+      $ref: '../common_aws/device_management_obj_aws.yaml#/deviceManagementObjAWS'
+    webOptions:
+      $ref: '../../../../schemas/inventory/common_inventory/web_options/web_options_object.yaml#/webOptionsObject'

@@ -1,0 +1,9 @@
+201editresponse:
+  description: Resource was successfully updated
+  content:
+    application/json:
+      schema:
+        $ref: '../schemas/toka_response/toka_api_response.yaml#/TokaAPIResponse'
+    text/html; charset=UTF-8:
+      schema:
+        type: string

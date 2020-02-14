@@ -1,0 +1,22 @@
+addAWSVpcRequest:
+  type: object
+  required:
+    - hostname
+  properties:
+    hostname:
+      type: string
+      example: aws-vpc-1
+    region:
+      type: string
+      example: us-east-2
+    cidr_block:
+      type: string
+      example: 192.168.1.0/24
+    options:
+      type: object
+      properties:
+        requestType:
+          type: string
+          enum:
+            - addExisting
+            - createNew

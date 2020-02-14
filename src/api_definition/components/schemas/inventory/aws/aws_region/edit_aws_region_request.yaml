@@ -1,0 +1,46 @@
+editAWSRegionRequest:
+  type: object
+  required: 
+    - deviceManagement
+  properties:
+    deviceManagement:
+      type: object
+      required:
+        - managementInterfaces
+      properties:
+        allowUsersToManageDevices:
+          type: boolean
+          example: true
+        managementInterfaces:
+          type: array
+          items:
+            type: object
+            required:
+              - managementType
+              - type
+              - authType
+            properties:
+              managementType:
+                type: string
+                example: iam
+              enabled:
+                type: boolean
+                example: true
+              type:
+                type: string
+                enum:
+                  - iam
+                  - https
+                example: iam
+              authType:
+                type: string
+                example: key
+              awsAccountId:
+                type: string
+                example: '8765456789'
+              iamAccessKeyId:
+                type: string
+                example: 23wsxct5456yhbfdert
+              iamSecretAccessKey:
+                type: string
+                example: 'sDFytre345TGHU765@#'

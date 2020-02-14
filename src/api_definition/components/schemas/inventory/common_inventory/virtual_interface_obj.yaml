@@ -1,0 +1,11 @@
+virtualInterfaceObj:
+  type: object
+  required: 
+    - uplinkPort
+  properties:
+    enabled:
+      type: boolean
+      example: true
+    uplinkPort:
+      type: integer
+      example: 1234
