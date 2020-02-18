@@ -15,7 +15,7 @@ The latest Toka SDK API client package can be downloaded from [Toka SDK API Clie
 ## Installation
 Once downloaded, it is recommended to install the Toka SDK API client package in its own virtual environment
 
-For details on how to setup and activate a Python virtual environment please refer to - https://virtualenv.pypa.io/en/latest/userguide.html
+For details on how to setup and activate a Python virtual environment please refer to - https://virtualenv.pypa.io/en/latest/user_guide.html
 
 The Toka SDK API client package can be installed using the command -
 
